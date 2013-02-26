@@ -4,6 +4,7 @@
 //
 
 #import "NSString+ActiveSupportInflector.h"
+#import <SenTestingKit/SenTestingKit.h>
 
 @interface ActiveSupportInflectorTest : SenTestCase
 @end
