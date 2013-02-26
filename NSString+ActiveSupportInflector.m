@@ -3,21 +3,29 @@
 //  ActiveSupportInflector
 //
 
-#import "NSString+MSAdditions.h"
 #import "ActiveSupportInflector.h"
 
 @implementation NSString (ActiveSupportInflector)
 
-static ActiveSupportInflector *inflector = NULL;
+static ActiveSupportInflector* _inflector = NULL;
 
-- (NSString *)pluralizeString {
-  _AtomicallyInitObjCPointer(&inflector, [[ActiveSupportInflector alloc] init], NULL);
-  return([inflector pluralize:self]);
+- (ActiveSupportInflector *)inflector
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _inflector = [[ActiveSupportInflector alloc] init];
+    });
+    return _inflector;
 }
 
-- (NSString *)singularizeString {
-  _AtomicallyInitObjCPointer(&inflector, [[ActiveSupportInflector alloc] init], NULL);
-  return([inflector singularize:self]);
+- (NSString *)pluralizeString
+{
+    return([[self inflector] pluralize:self]);
+}
+
+- (NSString *)singularizeString
+{
+    return([[self inflector] singularize:self]);
 }
 
 @end
