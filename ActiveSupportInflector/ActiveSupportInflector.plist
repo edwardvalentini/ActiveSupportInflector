@@ -72,6 +72,26 @@
 			"(quiz)$",
 			"$1zes",
 		),
+		(
+			"zoon$",
+			"$zoa",
+		),
+		(
+			"lion$",
+			lia,
+		),
+		(
+			"dex$",
+			dices,
+		),
+		(
+			"pus$",
+			puses,
+		),
+		(
+			"lus$",
+			li,
+		),
 	);
 	singularRules = (
 		(
@@ -196,6 +216,30 @@
 			database,
 			databases,
 		),
+		(
+			foot,
+			feet,
+		),
+		(
+			belief,
+			beliefs,
+		),
+		(
+			"\"([aA])ttorney ([gG])eneral\"",
+			"\"$1ttorneys $2eneral\"",
+		),
+		(
+			leaf,
+			leaves,
+		),
+		(
+			goose,
+			geese,
+		),
+		(
+			tooth,
+			teeth,
+		),
 	);
 	uncountableWords = (
 		equipment,
@@ -206,5 +250,7 @@
 		series,
 		fish,
 		sheep,
+		deer,
+		moose,
 	);
 }
