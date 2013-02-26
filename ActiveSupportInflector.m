@@ -52,7 +52,10 @@ static id _activeSupportInflectorBundlePlist = nil;
 
 + (id)activeSupportInflectorBundlePlist
 {
-    _AtomicallyInitObjCPointer(&_activeSupportInflectorBundlePlist, [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"ActiveSupportInflector" ofType:@"plist"]], NULL);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _activeSupportInflectorBundlePlist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"ActiveSupportInflector" ofType:@"plist"]];
+    });
     return(_activeSupportInflectorBundlePlist);
 }
 
