@@ -19,7 +19,9 @@
     if((_rule = [newRule copy]) != nil)
     {
         NSError *error = nil;
-        if((_regex = [[NSRegularExpression alloc] initWithPattern:_rule options:0 error:&error]) == NULL)
+        if((_regex = [[NSRegularExpression alloc] initWithPattern:_rule
+                                                          options:NSRegularExpressionCaseInsensitive
+                                                            error:&error]) == nil)
         {
             NSLog(@"<%@:%p %@>: Unable to create a regular expression using the rule '%@': Error: %@, userInfo: %@", NSStringFromClass([self class]), self, NSStringFromSelector(_cmd), _rule, error, [error userInfo]);
         }
@@ -135,19 +137,57 @@ static id _activeSupportInflectorBundlePlist = nil;
 
 - (NSString*)_applyInflectorRules:(NSArray*)rules toString:(NSString*)string
 {
-    if([_uncountableWords containsObject:string])
+    NSSet* set = [_uncountableWords objectsWithOptions:NSEnumerationConcurrent
+                                           passingTest:^BOOL(NSString* obj, BOOL *stop)
+                  {
+                      if ([obj caseInsensitiveCompare:string] == NSOrderedSame)
+                      {
+                          return YES;
+                          *stop = YES;
+                      }
+                      return NO;
+                  }];
+    if ([set count] != 0)
     {
-        return(string);
+        NSString* word = [set anyObject];
+        return [self correctCapitalizationforWord:word
+                                     fromOriginal:string];
     }
+    
+    
     NSRange range = NSMakeRange(0UL, [string length]);
     for(ActiveSupportInflectorRule *rule in rules)
     {
-        if([rule.regex firstMatchInString:string options:0 range:range])
+        if([rule.regex firstMatchInString:string
+                                  options:NSMatchingReportProgress
+                                    range:range])
         {
-            return([rule.regex stringByReplacingMatchesInString:string options:0 range:range withTemplate:rule.replacement]);
+            NSString* word = [rule.regex stringByReplacingMatchesInString:string
+                                                                  options:NSMatchingReportProgress
+                                                                    range:range
+                                                             withTemplate:rule.replacement];
+            string = [self correctCapitalizationforWord:word
+                                           fromOriginal:string];
         }
     }
     return(string);
 }
 
+- (NSString *)correctCapitalizationforWord:(NSString *)word
+                              fromOriginal:(NSString *)originalWord
+{
+    NSString* firstCharacter = [originalWord substringWithRange:NSMakeRange(0, 1)];
+    NSString* capitalisedFirstCharacter = [firstCharacter capitalizedString];
+    
+    if ([firstCharacter isEqualToString:capitalisedFirstCharacter])
+    {
+        word = [word stringByReplacingCharactersInRange:NSMakeRange(0, 1)
+                                             withString:capitalisedFirstCharacter];
+    }
+    if ([originalWord isEqualToString:[originalWord uppercaseString]])
+    { 
+        word = [word uppercaseString];
+    }
+    return word;
+}
 @end
