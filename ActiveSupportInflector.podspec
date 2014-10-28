@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ActiveSupportInflector"
-  s.version      = "0.1.3"
+  s.version      = "0.1.4"
   s.summary      = "Active Support Inflector"
   s.homepage     = "https://github.com/edwardvalentini/ActiveSupportInflector"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
